@@ -78,4 +78,25 @@ router.delete('/books/:id', async function (req, res) {
     });
 });
 
+// Adding into Fav's
+
+router.post('/books/fav', async function (req, res) {
+    const title= req.body.title;
+    const isbn = req.body.isbn;
+    const author = req.body.author;
+    const bookExist = await bookModel.findOne({isbn : isbn});
+  
+    if (bookExist) return res.send('Book already exist');
+
+    var data = await bookModel.create({title,isbn,author});
+    data.save();
+
+    res.send("Book Uploaded");
+});
+
+router.get('/books/fav', async function (req, res) {
+    const bookList = await bookModel.find();
+    console.log(bookList);
+    res.send(bookList);
+ });
 module.exports = router;
